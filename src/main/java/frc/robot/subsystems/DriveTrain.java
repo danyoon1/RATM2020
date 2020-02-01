@@ -8,27 +8,39 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.Drive;
 
 public class DriveTrain extends SubsystemBase {
   /**
    * Creates a new driveTrain.
    */
-  private WPI_VictorSPX frontLeft;
-  private WPI_VictorSPX frontRight;
-  private WPI_VictorSPX backLeft;
-  private WPI_VictorSPX backRight;
+  private final WPI_VictorSPX frontLeft;
+  private final WPI_VictorSPX frontRight;
+  private final WPI_VictorSPX backLeft;
+  private final WPI_VictorSPX backRight;
 
-  private SpeedControllerGroup leftDrive;
-  private SpeedControllerGroup rightDrive;
-  private DifferentialDrive myRobot;
+  private final SpeedControllerGroup leftDrive;
+  private final SpeedControllerGroup rightDrive;
+  private final DifferentialDrive myRobot;
 
-  /***
-   * 
-   * <p>Initalizes drive motors and helper classes.</p>
+  private final Encoder leftEncoder;
+  private final Encoder rightEncoder;
+
+  private final Gyro gyro;
+
+  /**
+   * Initalizes drive motors and helper classes.
+   * </p>
    */
+
   public DriveTrain() {
     frontLeft = new WPI_VictorSPX(0);
     frontRight = new WPI_VictorSPX(1);
@@ -42,6 +54,13 @@ public class DriveTrain extends SubsystemBase {
     leftDrive = new SpeedControllerGroup(frontLeft, backLeft);
     rightDrive = new SpeedControllerGroup(frontRight, backRight);
     myRobot = new DifferentialDrive(leftDrive, rightDrive);
+
+    leftEncoder = new Encoder(0, 1);
+    leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
+    rightEncoder = new Encoder(2, 3);
+    rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_PULSE);
+
+    gyro = new ADXRS450_Gyro(SPI.Port.kMXP);
   }
 
   @Override
@@ -49,11 +68,34 @@ public class DriveTrain extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void arcadeDrive(double forward, double rotation) {
-    myRobot.arcadeDrive(forward, rotation);
+  public void arcadeDrive(final double left, final double right) {
+    myRobot.arcadeDrive(left, right);
   }
 
-  public void tankDrive(double left, double right) {
+  public void tankDrive(final double left, final double right) {
     myRobot.tankDrive(left, right);
   }
+
+  public void leftEncoderReset() {
+    leftEncoder.reset();
+  }
+
+  public double leftEncoderValue() {
+    return leftEncoder.getDistance();
+  }
+
+  /**
+   * returns gyro value.
+   * @return the rotational value of the gyroscope
+   */
+
+  public double getGyro() {
+    if (gyro.getAngle() > 180) {
+      return gyro.getAngle() - 360;
+    } else {
+      return gyro.getAngle();
+    }
+    
+  }
+
 }

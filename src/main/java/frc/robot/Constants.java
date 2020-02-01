@@ -16,8 +16,36 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final boolean DRIVE_ARCADE = true;
-  public static final double LOW_SPEED = 0.33;
-  public static final double MID_SPEED = 0.67;
-  public static final double HIGH_SPEED = 1;
+  public static double HIGH_SPEED = 0.85;
+  public static double MID_SPEED = 0.6;
+  public static double LOW_SPEED = 0.4;
+  
+  public static final class Drive {
+    public static double DISTANCE_PER_PULSE = (6 * Math.PI / 2048);
+  }
+
+  public static final class DrivePid {
+    public static double PTURN = 1;
+    public static double ITURN = 0;
+    public static double DTURN = 0;
+    public static double TURN_TOLERANCE = 2;
+    public static double SPEED_TOLERANCE = 3;
+  }
+
+  public static final class Intake {
+    public static double INTAKE_SPEED = 0.7;
+    public static double CONVEYOR_SPEED = 0.7;
+  }
+
+  public static final class Shoot {
+    public static double SHOOT_LOW = 0.2;
+    public static double SHOOT_HIGH = 0.8;
+    public static double SHOOTRATE = 1 / 2048;
+    public static double FAST_RPM = 3000;
+    public static double KS = 1;
+    public static double KV = 1;
+  }
+
 }
+
+
